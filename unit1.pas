@@ -51,6 +51,7 @@ begin
   FFlow.Align := alClient;
   FFlow.DoubleBuffered := True;
   FFlow.ShowCaptions := True;
+  FFLow.Animationspeed := 3;
   FFLow.MaxZoomsize := trunc(Width /2);
   FFlow.PageSize := 50;
   FFlow.Show;
