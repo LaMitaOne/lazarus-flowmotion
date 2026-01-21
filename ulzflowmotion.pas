@@ -1085,8 +1085,6 @@ begin
     FAllCaptions.Free;
     FAllPaths.Free;
     FAllHints.Free;
-    if Assigned(FAllHints) then
-      FAllHints.Free;
   except
     // Ensure destructor completes even if errors occur
   end;
@@ -5889,4 +5887,5 @@ end;
 
 
 end.
+
 
