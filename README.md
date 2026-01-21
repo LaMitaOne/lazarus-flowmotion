@@ -35,8 +35,6 @@ Features:
     ActivationZone -> move selected to defined areas and trigger event   
    
     Smooth transitions, similar in spirit to TMS GUIMotions but much lighter   
-    
-    Works on Delphi 7 and Delphi 11.3 here, so probably on any Delphi   
-   
+     
     Compiled exe included, play some with it :) you will like it   
    
