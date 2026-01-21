@@ -5,7 +5,7 @@ unit Unit1;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs,
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls,
   // This assumes you saved the Flowmotion component as "ulzflowmotion.pas"
   ulzflowmotion;
 
@@ -14,6 +14,8 @@ type
   { TForm1 }
 
   TForm1 = class(TForm)
+    Button1: TButton;
+    procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -32,6 +34,11 @@ implementation
 { TForm1 }
 
 procedure TForm1.FormCreate(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.Button1Click(Sender: TObject);
 var
   i: Integer;
   Files, Caps, Paths, Hints: TStringList;

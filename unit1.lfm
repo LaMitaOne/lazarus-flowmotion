@@ -1,10 +1,21 @@
 object Form1: TForm1
   Left = 313
-  Height = 823
+  Height = 827
   Top = 151
   Width = 1100
   Caption = 'Form1'
+  ClientHeight = 823
+  ClientWidth = 1100
   LCLVersion = '4.0.0.4'
   OnCreate = FormCreate
   OnResize = FormResize
+  object Button1: TButton
+    Left = 66
+    Height = 25
+    Top = 85
+    Width = 75
+    Caption = 'Start'
+    TabOrder = 0
+    OnClick = Button1Click
+  end
 end
