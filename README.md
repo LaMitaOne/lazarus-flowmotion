@@ -16,9 +16,7 @@ But since thats the first time i see something of me working in lazarus i will f
    
 Features:   
    
-    Pinterest-like masonry layout   
-   
-    freefloat Layout with save/load positions   
+    Pinterest-like masonry layout     
    
     Animated appearance (slide-in, “falling” effects, breathing)   
    
@@ -26,7 +24,7 @@ Features:
     
     HotTrack & HotZoom hover effects   
    
-    Dragging selected or all free floating   
+    Dragging selected   
    
     Threaded Animation   
    
