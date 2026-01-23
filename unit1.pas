@@ -196,6 +196,7 @@ begin
   FFLow.Animationspeed := 3;
   FFLow.MaxZoomsize := trunc(Width /2);
   FFlow.PageSize := 200;
+  FFlow.Spacing := 10;
 
   FFlow.OnSelectedImageDblClick := @SelectedImageDblClick;
 
