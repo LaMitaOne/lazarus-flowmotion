@@ -2,7 +2,7 @@
   uLzFlowmotion
 ********************************************************************************}
 
-{ Lazarus-Flowmotion v0.1 alpha                                                }
+{ Lazarus-Flowmotion v0.2 alpha                                                }
 { based on vcl flowmotion https://github.com/LaMitaOne/Flowmotion              }
 { by Lara Miriam Tamy Reschke                                                  }
 {                                                                              }
@@ -13,6 +13,9 @@
 
 {
  ----Latest Changes
+   v 0.2
+     - Added more functions to sample project
+     - Fixed Captions now drawing correctly
    v 0.1
      - first running lifesign :D
  }
@@ -4894,7 +4897,6 @@ var
   var
     TextRect: TRect;
     CaptionW, CaptionH: Integer;
-    BlendFunction: TBlendFunction;
     Lines: TStringList;
     i, LineHeight: Integer;
     MaxCaptionWidth: Integer;
@@ -4910,20 +4912,39 @@ var
     ActualLinesToShow: Integer;
     CurrentCaptionColor: TColor;
     CurrentCaptionBackground: TColor;
-    InflatedDrawRect: TRect;  // Copy of DrawRect to inflate
+    InflatedDrawRect: TRect;
+    Img: TBitmap; // Temporary bitmap variable for clarity
   begin
     if not FShowCaptions or (Item.Caption = '') then
       Exit;
     if FCaptionOnHoverOnly and (Item <> FHotItem) and (Item <> FSelectedImage) then
       Exit;
-    Canvas.Font.Assign(FCaptionFont);
-    Canvas.Font.Color := FCaptionColor;
+
+    // ---------------------------------------------------------
+    // LAZARUS FIX 1: Force Font Realization
+    // In Lazarus, simply assigning the font isn't always enough
+    // for TextWidth to return correct values immediately.
+    // ---------------------------------------------------------
+    Canvas.Lock;
+    try
+      Canvas.Font.Assign(FCaptionFont);
+      if Item.IsSelected then
+        Canvas.Font.Color := FSelectedCaptionColor
+      else
+        Canvas.Font.Color := FCaptionColor;
+      // Ensure the font metrics are calculated
+      Canvas.Font.Height; // Access property to force update
+    finally
+      Canvas.Unlock;
+    end;
+
     // --- Step 1: Define constraints ---
     MaxCaptionHeight := Canvas.TextHeight('Hg') * 2 + 12;
     MaxCaptionWidth := (DrawRect.Right - DrawRect.Left) - 30;
     if MaxCaptionWidth < 30 then
       MaxCaptionWidth := 40;
-    // --- Step 2: ALWAYS perform word wrapping ---
+
+    // --- Step 2: Perform word wrapping ---
     Lines := TStringList.Create;
     Lines.Capacity := 2;
     try
@@ -4940,10 +4961,12 @@ var
           Inc(i);
         WordEnd := i - 1;
         Word := Copy(Item.Caption, WordStart, WordEnd - WordStart + 1);
+
         if CurrentLine = '' then
           LineWidth := Canvas.TextWidth(Word)
         else
           LineWidth := Canvas.TextWidth(CurrentLine + ' ' + Word);
+
         if LineWidth > MaxCaptionWidth then
         begin
           if CurrentLine <> '' then
@@ -4960,23 +4983,21 @@ var
       end;
       if CurrentLine <> '' then
         Lines.Add(CurrentLine);
-      // --- Step 3: Check if the resulting height is too high and truncate lines ---
+
+      // --- Step 3: Truncate lines if too high ---
       LineHeight := Canvas.TextHeight('Hg') + 2;
       MaxCaptionHeight := Max(MaxCaptionHeight, LineHeight * 2);
       MaxLinesToShow := 2;
       if MaxLinesToShow < 1 then
         MaxLinesToShow := 1;
       ActualLinesToShow := Min(MaxLinesToShow, Lines.Count);
-      // If we have more lines than space, truncate the list's height.
+
       if Lines.Count > MaxLinesToShow then
-      begin
-        CaptionH := MaxCaptionHeight;
-      end
+        CaptionH := MaxCaptionHeight
       else
-      begin
         CaptionH := Lines.Count * LineHeight + 12;
-      end;
-      // --- Step 4: Calculate the final width of the caption box ---
+
+      // --- Step 4: Calculate final width ---
       MaxLineWidth := 0;
       for i := 0 to ActualLinesToShow - 1 do
       begin
@@ -4985,53 +5006,66 @@ var
           MaxLineWidth := LineTextWidth;
       end;
       CaptionW := MaxLineWidth + 24;
-      // --- Step 5: Inflate DrawRect if image is too small for caption ---
+
+      // --- Step 5: Inflate DrawRect if needed ---
       InflatedDrawRect := DrawRect;
-      // Check if image height is insufficient for caption at bottom
       if (InflatedDrawRect.Bottom - InflatedDrawRect.Top) < CaptionH + FCaptionOffsetY then
       begin
-        // Inflate downward to make space for caption
         InflateRect(InflatedDrawRect, 0, CaptionH + FCaptionOffsetY - (InflatedDrawRect.Bottom - InflatedDrawRect.Top));
       end;
-      // --- Step 6: Position and draw the caption box ---
+
+      // --- Step 6: Position the caption box ---
       TextRect.Left := InflatedDrawRect.Left + (InflatedDrawRect.Right - InflatedDrawRect.Left - CaptionW) div 2;
       TextRect.Top := InflatedDrawRect.Bottom - CaptionH - FCaptionOffsetY;
       TextRect.Right := TextRect.Left + CaptionW;
       TextRect.Bottom := TextRect.Top + CaptionH;
-      // Simple clipping to keep it on screen
+
+      // Simple clipping
       if TextRect.Bottom > ClientHeight then
         Dec(TextRect.Top, TextRect.Bottom - ClientHeight);
       if TextRect.Top < 0 then
         TextRect.Top := 0;
       TextRect.Bottom := TextRect.Top + CaptionH;
-      FTempBitmap.Width := CaptionW;
-      FTempBitmap.Height := CaptionH;
+
+      // --- Step 7: Render to FTempBitmap ---
+      // We use a local variable Img to avoid confusion with the global FTempBitmap
+      Img := FTempBitmap;
+      Img.Width := CaptionW;
+      Img.Height := CaptionH;
+
+      // Draw Background
       if Item.IsSelected then
-      begin
-        CurrentCaptionColor := FSelectedCaptionColor;
-        CurrentCaptionBackground := FSelectedCaptionBackground;
-      end
+        Img.Canvas.Brush.Color := FSelectedCaptionBackground
       else
-      begin
-        CurrentCaptionColor := FCaptionColor;
-        CurrentCaptionBackground := FCaptionBackground;
-      end;
-      FTempBitmap.Canvas.Brush.Color := CurrentCaptionBackground;
-      FTempBitmap.Canvas.FillRect(Rect(0, 0, CaptionW, CaptionH));
-      FTempBitmap.Canvas.Font.Assign(FCaptionFont);
-      FTempBitmap.Canvas.Font.Color := CurrentCaptionColor;
-      FTempBitmap.Canvas.Brush.Style := bsClear;
+        Img.Canvas.Brush.Color := FCaptionBackground;
+
+      Img.Canvas.FillRect(Rect(0, 0, CaptionW, CaptionH));
+
+      // Setup Font for Bitmap
+      Img.Canvas.Font.Assign(Canvas.Font);
+      Img.Canvas.Brush.Style := bsClear;
+
+      // Draw Text Lines
       for i := 0 to ActualLinesToShow - 1 do
       begin
         LineTextWidth := Canvas.TextWidth(Lines[i]);
         TextX := (CaptionW - LineTextWidth) div 2;
-        FTempBitmap.Canvas.TextOut(TextX, 6 + i * LineHeight, Lines[i]);
+        Img.Canvas.TextOut(TextX, 6 + i * LineHeight, Lines[i]);
       end;
-      BlendFunction.BlendOp := AC_SRC_OVER;
-      BlendFunction.BlendFlags := 0;
-      BlendFunction.SourceConstantAlpha := FCaptionAlpha;
-      BlendFunction.AlphaFormat := 0;
-      //AlphaBlend(Canvas.Handle, TextRect.Left, TextRect.Top, CaptionW, CaptionH, FTempBitmap.Canvas.Handle, 0, 0, CaptionW, CaptionH, BlendFunction);
+
+      // ---------------------------------------------------------
+      // LAZARUS FIX 2: Draw the semi-transparent Bitmap
+      // Instead of the Windows API AlphaBlend, we use standard Draw.
+      // Since we are inside a Paint cycle, we can just draw it directly.
+      // NOTE: If you want REAL transparency (seeing the image behind the text),
+      // you need to enable the Bitmap's transparency, but for simple boxes
+      // this solid draw is usually what is expected.
+      // ---------------------------------------------------------
+
+      // If you have the 'LazPNG' or similar advanced transparency needs, you might need an ImageList.
+      // But for standard solid background captions:
+      Canvas.Draw(TextRect.Left, TextRect.Top, Img);
+
     finally
       Lines.Free;
     end;
@@ -5887,4 +5921,5 @@ end;
 
 
 end.
+
 

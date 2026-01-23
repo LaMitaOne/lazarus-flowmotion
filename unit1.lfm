@@ -1,21 +1,206 @@
 object Form1: TForm1
-  Left = 313
-  Height = 827
-  Top = 151
-  Width = 1100
+  Left = 629
+  Height = 894
+  Top = 111
+  Width = 1423
+  Align = alLeft
   Caption = 'Form1'
-  ClientHeight = 823
-  ClientWidth = 1100
-  LCLVersion = '4.0.0.4'
-  OnCreate = FormCreate
+  ClientHeight = 890
+  ClientWidth = 1423
+  LCLVersion = '4.4.0.0'
   OnResize = FormResize
-  object Button1: TButton
-    Left = 66
-    Height = 25
-    Top = 85
-    Width = 75
-    Caption = 'Start'
+  object Panel3: TPanel
+    Left = 88
+    Height = 40
+    Top = 104
+    Width = 56
+    Caption = 'Panel3'
+    TabOrder = 2
+    Visible = False
+  end
+  object Panel1: TPanel
+    Left = 0
+    Height = 890
+    Top = 0
+    Width = 170
+    Align = alLeft
+    ClientHeight = 890
+    ClientWidth = 170
     TabOrder = 0
-    OnClick = Button1Click
+    object Button3: TButton
+      Left = 8
+      Height = 25
+      Top = 72
+      Width = 128
+      Caption = 'Add 1 pic rnd entry'
+      TabOrder = 0
+      OnClick = Button3Click
+    end
+    object Button4: TButton
+      Left = 8
+      Height = 25
+      Top = 112
+      Width = 128
+      Caption = 'Add 1 pic from here'
+      TabOrder = 1
+      OnClick = Button4Click
+    end
+    object Button5: TButton
+      Left = 8
+      Height = 25
+      Top = 144
+      Width = 128
+      Caption = 'Add opendialog'
+      TabOrder = 2
+      OnClick = Button5Click
+    end
+    object Button6: TButton
+      Left = 8
+      Height = 25
+      Top = 172
+      Width = 128
+      Caption = 'Add pic list'
+      TabOrder = 3
+      OnClick = Button6Click
+    end
+    object Button2: TButton
+      Left = 8
+      Height = 25
+      Top = 40
+      Width = 43
+      Caption = 'Clear'
+      TabOrder = 4
+      OnClick = Button2Click
+    end
+    object Button7: TButton
+      Left = 8
+      Height = 25
+      Top = 200
+      Width = 128
+      Caption = 'set backgrnd pic'
+      TabOrder = 5
+      OnClick = Button7Click
+    end
+    object Button8: TButton
+      Left = 61
+      Height = 25
+      Top = 40
+      Width = 75
+      Caption = 'Clear to pos'
+      TabOrder = 6
+      OnClick = Button8Click
+    end
+    object SpinEdit1: TSpinEdit
+      Left = 6
+      Height = 23
+      Top = 344
+      Width = 130
+      MaxValue = 2000
+      TabOrder = 7
+      OnChange = SpinEdit1Change
+    end
+    object rbanimspeed: TRadioButton
+      Left = 8
+      Height = 19
+      Top = 288
+      Width = 105
+      Caption = 'Animationspeed'
+      TabOrder = 8
+    end
+    object rbpagesize: TRadioButton
+      Left = 8
+      Height = 19
+      Top = 312
+      Width = 63
+      Caption = 'Pagesize'
+      TabOrder = 9
+    end
+    object Button9: TButton
+      Left = 8
+      Height = 25
+      Top = 520
+      Width = 128
+      Caption = 'set glow color'
+      TabOrder = 10
+      OnClick = Button9Click
+    end
+    object Button10: TButton
+      Left = 10
+      Height = 25
+      Top = 552
+      Width = 128
+      Caption = 'set hot color'
+      TabOrder = 11
+      OnClick = Button10Click
+    end
+    object CheckBox1: TCheckBox
+      Left = 16
+      Height = 19
+      Top = 400
+      Width = 95
+      Caption = 'Show captions'
+      Checked = True
+      State = cbChecked
+      TabOrder = 12
+      OnChange = CheckBox1Change
+    end
+    object CheckBox2: TCheckBox
+      Left = 32
+      Height = 19
+      Top = 424
+      Width = 91
+      Caption = 'only on hover'
+      Checked = True
+      State = cbChecked
+      TabOrder = 13
+      OnChange = CheckBox2Change
+    end
+  end
+  object Panel2: TPanel
+    Left = 1320
+    Height = 65
+    Top = 799
+    Width = 65
+    Anchors = [akRight, akBottom]
+    Caption = 'Panel2'
+    TabOrder = 1
+    Visible = False
+  end
+  object OpenDialog1: TOpenDialog
+    Left = 192
+    Top = 104
+  end
+  object Timer1: TTimer
+    Interval = 100
+    OnTimer = Timer1Timer
+    Left = 224
+    Top = 16
+  end
+  object ColorDialog1: TColorDialog
+    Color = clBlack
+    CustomColors.Strings = (
+      'ColorA=000000'
+      'ColorB=000080'
+      'ColorC=008000'
+      'ColorD=008080'
+      'ColorE=800000'
+      'ColorF=800080'
+      'ColorG=808000'
+      'ColorH=808080'
+      'ColorI=C0C0C0'
+      'ColorJ=0000FF'
+      'ColorK=00FF00'
+      'ColorL=00FFFF'
+      'ColorM=FF0000'
+      'ColorN=FF00FF'
+      'ColorO=FFFF00'
+      'ColorP=FFFFFF'
+      'ColorQ=C0DCC0'
+      'ColorR=F0CAA6'
+      'ColorS=F0FBFF'
+      'ColorT=A4A0A0'
+    )
+    Left = 192
+    Top = 152
   end
 end
