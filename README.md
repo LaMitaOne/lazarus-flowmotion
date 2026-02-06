@@ -1,5 +1,7 @@
 # lazarus-flowmotion
 Animated Image Gallery Lazarus-Flowmotion v0.2 alpha   
+    
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/LaMitaOne/lazarus-flowmotion)    
    
 Port of my VCL FLowmotion https://github.com/LaMitaOne/Flowmotion     
    
